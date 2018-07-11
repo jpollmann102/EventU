@@ -21,86 +21,77 @@
       require "config.php";
       $error = '';
 
-      if(isset($_POST['submit']) && !empty($_POST['username']) && !empty($_POST['password']))
+      if(isset($_POST['submit']) && !empty($_POST['rsoName']) && !empty($_POST['member1'])
+        && !empty($_POST['member2']) && !empty($_POST['member3']) && !empty($_POST['member4'])
+        && !empty($_POST['rsoDesc']))
       {
-        $username = htmlspecialchars($_POST['username']);
-  			$password = htmlspecialchars($_POST['password']);
-        $firstname = htmlspecialchars($_POST['firstname']);
-        $lastname = htmlspecialchars($_POST['lastname']);
+        $rsoName = htmlspecialchars($_POST['rsoName']);
+  			$member1 = htmlspecialchars($_POST['member1']);
+        $member2 = htmlspecialchars($_POST['member2']);
+        $member3 = htmlspecialchars($_POST['member3']);
+        $member4 = htmlspecialchars($_POST['member4']);
+        $rsoAdmin = $_SESSION['login_user'];
+        $rsoDesc = htmlspecialchars($_POST['rsoDesc']);
 
-  			$sql = "INSERT INTO `the_user` (`user_name`, `pass_word`, `first_name`, `last_name`)
-  					VALUES ('$username', '$password', '$firstname', '$lastname')";
+        // // make sure that the user is a student and grab their id
+        // $sql = "SELECT student_id FROM student WHERE user_name = '$rsoAdmin'";
+        // $result = $conn->query($sql);
+        //
+        // if($result->num_rows > 0)
+        // {
+        //   // success
+        //   // grab student ID
+        //   while($row = $result->fetch_assoc())
+        //   {
+        //     $studentID = $row['student_id'];
+        //   }
+        // }else
+        // {
+        //   // not a registered student
+        //   $error = 'You must be a registered student to create an RSO';
+        //   $conn->close();
+        //   exit();
+        // }
+
+        // create the rso
+  			$sql = "INSERT INTO `create_rso` (`RSO_name`, `user_name`, `RSO_description`)
+  					VALUES ('$rsoName', '$rsoAdmin', '$rsoDesc')";
 
   			if($conn->query($sql))
   			{
   				// created successfully
-          $_SESSION['isRSO'] = FALSE;
-  				$_SESSION['login_user'] = $firstname . " " . $lastname;
+          $_SESSION['isRSO'] = TRUE;
+  				$_SESSION['login_user'] = $rsoAdmin . " (" . $rsoName . ")";
   				$_SESSION['logged_in'] = TRUE;
         }else
         {
           // duplicate username
-          $error = 'Username taken';
+          $error = 'RSO name already registered';
           $conn->close();
         }
 
-        if(isset($_POST['student']))
-        {
-          // user is a student
-          if(!empty($_POST['studentID']))
-          {
-            $studentID = htmlspecialchars($_POST['studentID']);
-
-            $sql = "INSERT INTO `student` (`student_id`, `user_name`)
-                    VALUES ('$studentID', '$username')";
-
-            if($conn->query($sql))
-            {
-              // added to student db successfully
-              $_SESSION['isStudent'] = TRUE;
-            }else
-            {
-              $error = 'Some error adding student';
-              $conn->close();
-            }
-          }else
-          {
-            $error = 'Please enter your student ID if you are a student';
-          }
-        }
       }else
       {
-        $error = 'Please enter a username and password';
+        $error = 'Please enter the information for your RSO';
       }
     ?>
 
-    <form class="registerUserForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
-      Username:<br />
-      <input type="text" name="username" required /><br />
-      Password:<br />
-      <input type="password" name="password" required /><br />
-      <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
-      <p id="studentChecked" style="display:none">
-        Student ID:<br />
-      </p>
-      <input id="studentChecked" name="studentID" style="display:none" type="text" required />
-
-      <script>
-        function studentChecked()
-        {
-          var checkBox = document.getElementById("studentCheck");
-          var textToAdd = document.getElementById("studentChecked");
-          if(checkBox.checked) textToAdd.style.display = "block";
-          else textToAdd.style.display = "none";
-        }
-      </script>
+    <form class="registerRSOForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
+      RSO Name:<br />
+      <input type="text" name="rsoName" required /><br />
+      RSO Description:<br />
+      <input type="text" name="rsoDesc" required /><br />
+      Member's Emails (You must have at least 4 other registered users):<br />
+      <input type="text" name="member1" required /><br />
+      <input type="text" name="member2" required /><br />
+      <input type="text" name="member3" required /><br />
+      <input type="text" name="member4" required /><br />
 
       <input type="submit" name="submit" value="Submit" /><br />
       <h4 class="error"><?php echo $error; ?></h4>
     </form>
     <p>
-      Already have an account? <a href="login.php">Login here</a>
-      Looking to register an RSO? <a href="registerRSO.php">Register here</a>
+      Need to register as a student? <a href="registerUser.php">Register here</a>
     </p>
   </body>
 </html>

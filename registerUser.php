@@ -57,7 +57,7 @@
             if($conn->query($sql))
             {
               // added to student db successfully
-              $_SESSION['isStudent'] = TRUE;
+              $_SESSION['studentID'] = $studentID;
             }else
             {
               $error = 'Some error adding student';
@@ -75,6 +75,10 @@
     ?>
 
     <form class="registerUserForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
+      First Name:<br />
+      <input type="text" name="firstname" required /><br />
+      Last Name:<br />
+      <input type="text" name="lastname" required /><br />
       Username:<br />
       <input type="text" name="username" required /><br />
       Password:<br />

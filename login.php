@@ -38,6 +38,19 @@
           }
           $_SESSION['logged_in'] = TRUE;
           $_SESSION['login_user'] = $firstname . " " . $lastname;
+
+          // check if the user is a student
+          $sql = "SELECT * FROM student WHERE user_name = '$username'";
+          $result = $conn->query($sql);
+          if($result->num_rows > 0)
+          {
+            while($row = $result->fetch_assoc())
+            {
+              $studentID = $row['student_id'];
+              $_SESSION['studentID'] = $studentID;
+            }
+          }
+
           header("Location: index.php");
           $conn->close();
           exit();
