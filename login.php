@@ -15,10 +15,12 @@
   <body>
     <h1><a href="index.php">EventU</a></h1>
     <h1>Login</h1>
+
     <!-- Code to login a user -->
     <?php
       require "config.php";
       $error = '';
+
       if(isset($_POST['submit']) && !empty($_POST['username']) && !empty($_POST['password']))
       {
         $username = htmlspecialchars($_POST['username']);
@@ -37,6 +39,7 @@
             $lastname = $row['last_name'];
           }
           $_SESSION['logged_in'] = TRUE;
+          $_SESSION['login_username'] = $username;
           $_SESSION['login_user'] = $firstname . " " . $lastname;
 
           // check if the user is a student
@@ -44,11 +47,22 @@
           $result = $conn->query($sql);
           if($result->num_rows > 0)
           {
+            // user is in fact a student
             while($row = $result->fetch_assoc())
             {
               $studentID = $row['student_id'];
               $_SESSION['studentID'] = $studentID;
             }
+          }
+
+          // check if the user is an admin as well
+          $sql = "SELECT * FROM the_admin WHERE user_name = '$username'";
+          $result = $conn->query($sql);
+          if($result->num_rows > 0)
+          {
+            // user is in fact an admin
+            $_SESSION['admin'] = TRUE;
+            // TODO: add support for checking name of RSO you are admin of
           }
 
           header("Location: index.php");

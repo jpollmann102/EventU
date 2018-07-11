@@ -34,7 +34,8 @@
   			if($conn->query($sql))
   			{
   				// created successfully
-          $_SESSION['isRSO'] = FALSE;
+          $_SESSION['admin'] = FALSE;
+          $_SESSION['login_username'] = $username;
   				$_SESSION['login_user'] = $firstname . " " . $lastname;
   				$_SESSION['logged_in'] = TRUE;
         }else
@@ -42,30 +43,48 @@
           // duplicate username
           $error = 'Username taken';
           $conn->close();
+          exit();
         }
 
         if(isset($_POST['student']))
         {
           // user is a student
-          if(!empty($_POST['studentID']))
+
+          // if(!empty($_POST['studentID']))
+          // {
+          //   $studentID = htmlspecialchars($_POST['studentID']);
+          //
+          //   $sql = "INSERT INTO `student` (`student_id`, `user_name`)
+          //           VALUES ('$studentID', '$username')";
+          //
+          //   if($conn->query($sql))
+          //   {
+          //     // added to student db successfully
+          //     $_SESSION['studentID'] = $studentID;
+          //   }else
+          //   {
+          //     $error = 'Some error adding student';
+          //     $conn->close();
+          //   }
+          // }else
+          // {
+          //   $error = 'Please enter your student ID if you are a student';
+          // }
+
+          $randID = rand(1000, 9999);
+          $studentID = $firstname[0] . $lastname[0] . $randID;
+
+          $sql = "INSERT INTO `student` (`student_id`, `user_name`)
+                  VALUES ('$studentID', '$username')";
+
+          if($conn->query($sql))
           {
-            $studentID = htmlspecialchars($_POST['studentID']);
-
-            $sql = "INSERT INTO `student` (`student_id`, `user_name`)
-                    VALUES ('$studentID', '$username')";
-
-            if($conn->query($sql))
-            {
-              // added to student db successfully
-              $_SESSION['studentID'] = $studentID;
-            }else
-            {
-              $error = 'Some error adding student';
-              $conn->close();
-            }
+            // added to student db successfully
+            $_SESSION['studentID'] = $studentID;
           }else
           {
-            $error = 'Please enter your student ID if you are a student';
+            $error = 'Some error adding student';
+            $conn->close();
           }
         }
       }else
@@ -84,7 +103,7 @@
       Password:<br />
       <input type="password" name="password" required /><br />
       <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
-      <p id="studentChecked" style="display:none">
+      <!-- <p id="studentChecked" style="display:none">
         Student ID:<br />
       </p>
       <input id="studentChecked" name="studentID" style="display:none" type="text" required />
@@ -97,7 +116,7 @@
           if(checkBox.checked) textToAdd.style.display = "block";
           else textToAdd.style.display = "none";
         }
-      </script>
+      </script> -->
 
       <input type="submit" name="submit" value="Submit" /><br />
       <h4 class="error"><?php echo $error; ?></h4>

@@ -21,6 +21,13 @@
       require "config.php";
       $error = '';
 
+      if(!isset($_SESSION['studentID']) || !isset($_SESSION['admin']))
+      {
+        // the person is not a student or admin, they cannot create an RSO
+        $error = 'You must be a student or admin to create an RSO';
+        exit();
+      }
+
       if(isset($_POST['submit']) && !empty($_POST['rsoName']) && !empty($_POST['member1'])
         && !empty($_POST['member2']) && !empty($_POST['member3']) && !empty($_POST['member4'])
         && !empty($_POST['rsoDesc']))
@@ -30,7 +37,6 @@
         $member2 = htmlspecialchars($_POST['member2']);
         $member3 = htmlspecialchars($_POST['member3']);
         $member4 = htmlspecialchars($_POST['member4']);
-        $rsoAdmin = $_SESSION['login_user'];
         $rsoDesc = htmlspecialchars($_POST['rsoDesc']);
 
         // // make sure that the user is a student and grab their id
@@ -53,22 +59,38 @@
         //   exit();
         // }
 
+        // first make the user an admin
+        $adminID = $_SESSION['studentID'] . '_admin';
+        $username = $_SESSION['login_username'];
+        $sql = "INSERT INTO `the_admin` (`admin_id`, `user_name`)
+                VALUES ('$adminID', '$username')";
+
+        if($conn->query($sql))
+        {
+          // created successfully
+          $_SESSION['admin'] = TRUE;
+          $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $rsoName . ")";
+        }
+
         // create the rso
-  			$sql = "INSERT INTO `create_rso` (`RSO_name`, `user_name`, `RSO_description`)
-  					VALUES ('$rsoName', '$rsoAdmin', '$rsoDesc')";
+        $loginUsername = $_SESSION['login_username'];
+        $loginID = $_SESSION['studentID'];
+  			$sql = "INSERT INTO `create_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`, `admin_id`)
+  					VALUES ('$rsoName', '$loginUsername', '$loginID', '$rsoDesc', '$adminID')";
 
   			if($conn->query($sql))
   			{
   				// created successfully
-          $_SESSION['isRSO'] = TRUE;
-  				$_SESSION['login_user'] = $rsoAdmin . " (" . $rsoName . ")";
-  				$_SESSION['logged_in'] = TRUE;
+
+
         }else
         {
-          // duplicate username
+          // duplicate rso name
           $error = 'RSO name already registered';
           $conn->close();
         }
+
+        // add the new members to join_rso and member_of_rso
 
       }else
       {
