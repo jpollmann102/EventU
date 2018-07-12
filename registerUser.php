@@ -8,13 +8,23 @@
 
 <html>
   <head>
-    <title>EventU</title>
-    <!-- TODO: put in stylesheets -->
+    <title>EventU - Register</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
   </head>
 
   <body>
-    <h1><a href="index.php">EventU</a></h1>
-    <h1>Register</h1>
+    <div class="sidenav">
+      <!-- Code for checking if user is logged in or not -->
+      <a href="index.php">EventU</a>
+      <?php if(isset($_SESSION['logged_in'])): ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login.php">Login</a>
+        <a href="registerUser.php">Register</a>
+      <?php endif; ?>
+      <a href="registerRSO.php">Register an RSO</a>
+    </div>
 
     <!-- Code to register a user -->
     <?php
@@ -68,27 +78,31 @@
         }
       }else
       {
-        $error = 'Please enter a username and password';
+        $error = 'Please enter the information above';
       }
     ?>
 
-    <form class="registerUserForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
-      First Name:<br />
-      <input type="text" name="firstname" required /><br />
-      Last Name:<br />
-      <input type="text" name="lastname" required /><br />
-      Username:<br />
-      <input type="text" name="username" required /><br />
-      Password:<br />
-      <input type="password" name="password" required /><br />
-      <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
+    <div class="main">
+      <h1>EventU - Register</h1>
 
-      <input type="submit" name="submit" value="Submit" /><br />
-      <h4 class="error"><?php echo $error; ?></h4>
-    </form>
-    <p>
-      Already have an account? <a href="login.php">Login here</a>
-      Looking to register an RSO? <a href="registerRSO.php">Register here</a>
-    </p>
+      <form class="registerUserForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
+        First Name:<br />
+        <input type="text" name="firstname" required /><br />
+        Last Name:<br />
+        <input type="text" name="lastname" required /><br />
+        Username:<br />
+        <input type="text" name="username" required /><br />
+        Password:<br />
+        <input type="password" name="password" required /><br />
+        <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
+
+        <input type="submit" name="submit" value="Submit" /><br />
+        <h4 class="error"><?php echo $error; ?></h4>
+      </form>
+      <p>
+        Already have an account? <a href="login.php">Login here</a><br /><br />
+        Looking to register an RSO? <a href="registerRSO.php">Register here</a>
+      </p>
+    </div>
   </body>
 </html>

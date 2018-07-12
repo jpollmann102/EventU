@@ -8,13 +8,23 @@
 
 <html>
   <head>
-    <title>EventU</title>
-    <!-- TODO: put in stylesheets -->
+    <title>EventU - Login</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
   </head>
 
   <body>
-    <h1><a href="index.php">EventU</a></h1>
-    <h1>Login</h1>
+    <div class="sidenav">
+      <!-- Code for checking if user is logged in or not -->
+      <a href="index.php">EventU</a>
+      <?php if(isset($_SESSION['logged_in'])): ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login.php">Login</a>
+        <a href="registerUser.php">Register</a>
+      <?php endif; ?>
+      <a href="registerRSO.php">Register an RSO</a>
+    </div>
 
     <!-- Code to login a user -->
     <?php
@@ -79,15 +89,19 @@
       }
     ?>
 
-    <form class="login_form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
-      Username/Email:<br />
-      <input type = "text" name = "username" required /><br />
-      Password:<br />
-      <input type = "password" name = "password" required /><br />
-      <input type = "submit" name = "submit" value = "Submit" />
-    </form>
-    <p>
-      Don't have an account? <a href = "register.php">Register here</a>
-    </p>
+    <div class="main">
+      <h1>EventU - Login</h1>
+      <form class="login_form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
+        Email:<br />
+        <input type = "text" name = "username" required /><br />
+        Password:<br />
+        <input type = "password" name = "password" required /><br />
+        <input type = "submit" name = "submit" value = "Submit" />
+      </form>
+      <p>
+        Don't have an account? <a href = "register.php">Register here</a>
+      </p>
+    </div>
+
   </body>
 </html>

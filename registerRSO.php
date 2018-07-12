@@ -8,19 +8,28 @@
 
 <html>
   <head>
-    <title>EventU</title>
-    <!-- TODO: put in stylesheets -->
+    <title>EventU - Register RSO</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
   </head>
 
   <body>
-    <h1><a href="index.php">EventU</a></h1>
-    <h1>Register</h1>
+    <div class="sidenav">
+      <!-- Code for checking if user is logged in or not -->
+      <a href="index.php">EventU</a>
+      <?php if(isset($_SESSION['logged_in'])): ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login.php">Login</a>
+        <a href="registerUser.php">Register</a>
+      <?php endif; ?>
+      <a href="registerRSO.php">Register an RSO</a>
+    </div>
 
     <!-- Code to register an RSO -->
     <?php
       require "config.php";
       $error = '';
-      $conn->beginTransaction();
 
       // check if the user can create an RSO
       if(!isset($_SESSION['studentID']) || !isset($_SESSION['admin']))
@@ -61,6 +70,8 @@
         $member3 = htmlspecialchars($_POST['member3']);
         $member4 = htmlspecialchars($_POST['member4']);
         $rsoDesc = htmlspecialchars($_POST['rsoDesc']);
+        $loginUsername = $_SESSION['login_username'];
+        $loginID = $_SESSION['studentID'];
 
         /**** first, make sure they are all registered students ****/
         $sql = "SELECT * FROM students WHERE user_name = '$member1'";
@@ -123,32 +134,6 @@
         }
         /*************************************************************/
 
-        /**** create the rso ****/
-        $loginUsername = $_SESSION['login_username'];
-        $loginID = $_SESSION['studentID'];
-  			$sql = "INSERT INTO `create_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`, `admin_id`)
-  					VALUES ('$rsoName', '$loginUsername', '$loginID', '$rsoDesc', '$adminID')";
-
-  			if(!$conn->query($sql))
-  			{
-          // some error creating RSO
-          $error = 'Some error inserting RSO';
-
-          // // remove user as an admin
-          // $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
-          //
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . 'Error removing admin';
-          // }
-
-          $conn->rollback();
-          $conn->close();
-          exit();
-        }
-        /*************************************************************/
-
         /**** add the new members to join_rso and member_of_rso ****/
         // first, get the student id of each new member
         $sql = "SELECT student_id FROM student WHERE user_name = '$member1'";
@@ -164,26 +149,6 @@
         {
           // some error getting the student id
           $error = 'Error getting student id of member 1';
-
-          // // remove user as admin and delete RSO
-          // $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
-          //
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . ' Error removing user as admin';
-          // }
-          //
-          // $sql = "DELETE FROM `create_rso` WHERE `RSO_name` = '$rsoName'";
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . 'Error removing RSO';
-          // }
-
-          $conn->rollback();
-          $conn->close();
-          exit();
         }
 
         $sql = "SELECT student_id FROM student WHERE user_name = '$member2'";
@@ -199,26 +164,6 @@
         {
           // some error getting the student id
           $error = 'Error getting student id of member 2';
-
-          // // remove user as admin and delete RSO
-          // $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
-          //
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . ' Error removing user as admin';
-          // }
-          //
-          // $sql = "DELETE FROM `create_rso` WHERE `RSO_name` = '$rsoName'";
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . 'Error removing RSO';
-          // }
-
-          $conn->rollback();
-          $conn->close();
-          exit();
         }
 
         $sql = "SELECT student_id FROM student WHERE user_name = '$member3'";
@@ -234,26 +179,6 @@
         {
           // some error getting the student id
           $error = 'Error getting student id of member 3';
-
-          // // remove user as admin and delete RSO
-          // $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
-          //
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . ' Error removing user as admin';
-          // }
-          //
-          // $sql = "DELETE FROM `create_rso` WHERE `RSO_name` = '$rsoName'";
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . 'Error removing RSO';
-          // }
-
-          $conn->rollback();
-          $conn->close();
-          exit();
         }
 
         $sql = "SELECT student_id FROM student WHERE user_name = '$member4'";
@@ -268,25 +193,21 @@
         }else
         {
           // some error getting the student id
-          $error = 'Error getting student id of member 1';
+          $error = 'Error getting student id of member 4';
+        }
 
-          // // remove user as admin and delete RSO
-          // $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
-          //
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . ' Error removing user as admin';
-          // }
-          //
-          // $sql = "DELETE FROM `create_rso` WHERE `RSO_name` = '$rsoName'";
-          // if(!$conn->query($sql))
-          // {
-          //   // error removing user as an admin
-          //   $error = $error . 'Error removing RSO';
-          // }
+        if($error != '')
+        {
+          // an error occured
 
-          $conn->rollback();
+          $sql = "DELETE FROM `the_admin` WHERE `user_name` = '$username'";
+
+          if(!$conn->query($sql))
+          {
+            // error removing user as an admin
+            $error = $error . ' Error removing user as admin';
+          }
+
           $conn->close();
           exit();
         }
@@ -320,7 +241,7 @@
         }
 
         $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
-                VALUES ('$rsoName', '$username', '$loginID', '$rsoDesc')";
+                VALUES ('$rsoName', '$member3', '$loginID', '$rsoDesc')";
 
         if(!$conn->query($sql))
   			{
@@ -340,7 +261,13 @@
         if($error != '')
         {
           // an error occurred, delete anything that may have been added
-          $conn->rollback();
+          $sql = "DELETE FROM `join_rso` WHERE `RSO_name` = '$rsoName'";
+          if(!$conn->query($sql))
+          {
+            // error removing user as an admin
+            $error = $error . 'Error removing users from join_rso';
+          }
+
           $conn->close();
           exit();
         }
@@ -354,7 +281,15 @@
         {
           // some error inserting admin
           $error = 'Error inserting admin into member_of_rso';
-          $conn->rollback();
+
+          // remove everything we just added
+          $sql = "DELETE FROM `join_rso` WHERE `RSO_name` = '$rsoName'";
+          if(!$conn->query($sql))
+          {
+            // error removing user as an admin
+            $error = $error . 'Error removing users from join_rso';
+          }
+
           $conn->close();
           exit();
         }
@@ -372,22 +307,27 @@
       }
     ?>
 
-    <form class="registerRSOForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
-      RSO Name:<br />
-      <input type="text" name="rsoName" required /><br />
-      RSO Description:<br />
-      <input type="text" name="rsoDesc" required /><br />
-      Member's Emails (You must have at least 4 other registered users):<br />
-      <input type="text" name="member1" required /><br />
-      <input type="text" name="member2" required /><br />
-      <input type="text" name="member3" required /><br />
-      <input type="text" name="member4" required /><br />
+    <div class="main">
+      <h1>EventU - Register RSO</h1>
 
-      <input type="submit" name="submit" value="Submit" /><br />
-      <h4 class="error"><?php echo $error; ?></h4>
-    </form>
-    <p>
-      Need to register as a student? <a href="registerUser.php">Register here</a>
-    </p>
+      <form class="registerRSOForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
+        RSO Name:<br />
+        <input type="text" name="rsoName" required /><br />
+        RSO Description:<br />
+        <input type="text" name="rsoDesc" required /><br />
+        Member's Emails (You must have at least 4 other registered users):<br />
+        <input type="text" name="member1" required /><br />
+        <input type="text" name="member2" required /><br />
+        <input type="text" name="member3" required /><br />
+        <input type="text" name="member4" required /><br />
+
+        <input type="submit" name="submit" value="Submit" /><br />
+        <h4 class="error"><?php echo $error; ?></h4>
+      </form>
+      <p>
+        Need to register as a student? <a href="registerUser.php">Register here</a>
+      </p>
+    </div>
+
   </body>
 </html>

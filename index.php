@@ -4,25 +4,33 @@
 <html>
   <head>
     <title>EventU</title>
-    <!-- TODO: put in stylesheets -->
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
   </head>
 
   <body>
-    <h1>EventU</h1>
+    <div class="sidenav">
+      <!-- Code for checking if user is logged in or not -->
+      <?php if(isset($_SESSION['logged_in'])): ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login.php">Login</a>
+        <a href="registerUser.php">Register</a>
+      <?php endif; ?>
+      <a href="registerRSO.php">Register an RSO</a>
+    </div>
 
-    <!-- Code for checking if user is logged in or not -->
-    <?php if(isset($_SESSION['logged_in'])): ?>
-      <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
-      <a href="logout.php"><p>Logout</p></a>
-    <?php else: ?>
-      <a href="login.php"><h3>Login</h3></a>
-      <a href="registerUser.php"><h3>Register</h3></a>
-      <a href="registerRSO.php"><h3>Register and RSO</h3></a>
-    <?php endif; ?>
+    <div class="main">
+      <h1>EventU</h1>
 
-    <!-- Put calendar here -->
+      <!-- Code for checking if user is logged in or not -->
+      <?php if(isset($_SESSION['logged_in'])): ?>
+        <?php echo "<p>Welcome " . $_SESSION['login_user'] . "</p>" ?>
+      <?php endif; ?>
 
+      <!-- Put calendar here -->
 
+    </div>
   </body>
 
 </html>
