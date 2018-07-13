@@ -17,7 +17,7 @@
       <!-- Code for checking if user is logged in or not -->
       <a href="index.php">EventU</a>
       <?php if(isset($_SESSION['logged_in'])): ?>
-        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>"; ?>
         <a href="logout.php">Logout</a>
       <?php else: ?>
         <a href="login.php">Login</a>
@@ -44,7 +44,7 @@
       if(!empty($_POST['rsoName']))
       {
         $rsoName = htmlspecialchars($_POST['rsoName']);
-        $sql = "SELECT RSO_name FROM create_rso WHERE RSO_name = '$rsoName'";
+        $sql = "SELECT RSO_name FROM member_of_rso WHERE RSO_name = '$rsoName'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0)
@@ -91,7 +91,7 @@
         if(!$result->num_rows > 0)
         {
           // not a registered user
-          $error = 'Member 2 is not a registered student';
+          $error = $error . ' Member 2 is not a registered student';
           $conn->close();
           exit();
         }
@@ -102,7 +102,7 @@
         if(!$result->num_rows > 0)
         {
           // not a registered user
-          $error = 'Member 3 is not a registered student';
+          $error = $error . ' Member 3 is not a registered student';
           $conn->close();
           exit();
         }
@@ -113,7 +113,7 @@
         if(!$result->num_rows > 0)
         {
           // not a registered user
-          $error = 'Member 4 is not a registered student';
+          $error = $error . ' Member 4 is not a registered student';
           $conn->close();
           exit();
         }
@@ -163,7 +163,7 @@
         }else
         {
           // some error getting the student id
-          $error = 'Error getting student id of member 2';
+          $error = $error . ' Error getting student id of member 2';
         }
 
         $sql = "SELECT student_id FROM student WHERE user_name = '$member3'";
@@ -178,7 +178,7 @@
         }else
         {
           // some error getting the student id
-          $error = 'Error getting student id of member 3';
+          $error = $error . ' Error getting student id of member 3';
         }
 
         $sql = "SELECT student_id FROM student WHERE user_name = '$member4'";
@@ -193,7 +193,7 @@
         }else
         {
           // some error getting the student id
-          $error = 'Error getting student id of member 4';
+          $error = $error . ' Error getting student id of member 4';
         }
 
         if($error != '')
@@ -298,7 +298,6 @@
         // created successfully
         $_SESSION['admin'] = TRUE;
         $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $rsoName . ")";
-        $conn->commit();
         header("Location: index.php");
         $conn->close();
       }else
@@ -328,6 +327,6 @@
         Need to register as a student? <a href="registerUser.php">Register here</a>
       </p>
     </div>
-
   </body>
+
 </html>

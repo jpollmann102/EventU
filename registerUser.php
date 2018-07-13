@@ -17,7 +17,7 @@
       <!-- Code for checking if user is logged in or not -->
       <a href="index.php">EventU</a>
       <?php if(isset($_SESSION['logged_in'])): ?>
-        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>"; ?>
         <a href="logout.php">Logout</a>
       <?php else: ?>
         <a href="login.php">Login</a>
@@ -59,7 +59,6 @@
         if(isset($_POST['student']))
         {
           // user is a student
-
           $randID = rand(1000, 9999);
           $studentID = $firstname[0] . $lastname[0] . $randID;
 
@@ -74,7 +73,11 @@
           {
             $error = 'Some error adding student';
             $conn->close();
+            exit();
           }
+
+          $conn->close();
+          header("Location: index.php");
         }
       }else
       {
