@@ -28,7 +28,7 @@
 
     <!-- Code to register an RSO -->
     <?php
-      require "config.php";
+     /* require "config.php";
       $error = '';
 
       // check if the user can create an RSO
@@ -74,7 +74,7 @@
         $loginID = $_SESSION['studentID'];
 
         /**** first, make sure they are all registered students ****/
-        $sql = "SELECT * FROM students WHERE user_name = '$member1'";
+        /*$sql = "SELECT * FROM students WHERE user_name = '$member1'";
         $result = $conn->query($sql);
 
         if(!$result->num_rows > 0)
@@ -120,7 +120,7 @@
         /*************************************************************/
 
         /**** then make the user an admin ****/
-        $adminID = $_SESSION['studentID'] . '_admin';
+        /*$adminID = $_SESSION['studentID'] . '_admin';
         $username = $_SESSION['login_username'];
         $sql = "INSERT INTO `the_admin` (`admin_id`, `user_name`)
                 VALUES ('$adminID', '$username')";
@@ -136,7 +136,7 @@
 
         /**** add the new members to join_rso and member_of_rso ****/
         // first, get the student id of each new member
-        $sql = "SELECT student_id FROM student WHERE user_name = '$member1'";
+        /*$sql = "SELECT student_id FROM student WHERE user_name = '$member1'";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0)
@@ -213,7 +213,7 @@
         }
 
         /**** add members to join_rso ****/
-        $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
+        /*$sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
                 VALUES ('$rsoName', '$username', '$loginID', '$rsoDesc')";
 
         if(!$conn->query($sql))
@@ -274,7 +274,7 @@
         /*************************************************************/
 
         /**** add admin to member_of_rso ****/
-        $sql = "INSERT INTO `member_of_rso` (`RSO_name`, `admin_id`, `user_name`, `student_id`)
+        /*$sql = "INSERT INTO `member_of_rso` (`RSO_name`, `admin_id`, `user_name`, `student_id`)
                 VALUES ('$rsoName', '$adminID', '$loginUsername', '$loginID')";
 
         if(!$conn->query($sql))
@@ -296,14 +296,14 @@
         /*************************************************************/
 
         // created successfully
-        $_SESSION['admin'] = TRUE;
+       /* $_SESSION['admin'] = TRUE;
         $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $rsoName . ")";
         header("Location: index.php");
         $conn->close();
       }else
       {
         $error = 'Please enter the information for your RSO';
-      }
+      }*/
     ?>
 
     <div class="main">
