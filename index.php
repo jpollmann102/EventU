@@ -4,11 +4,14 @@
 <html>
   <head>
     <title>EventU</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <script src='lib/jquery.min.js'></script>
+    <link rel="stylesheet" href="lib/jqueryui/jquery-ui.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js" integrity="sha384-CS0nxkpPy+xUkNGhObAISrkg/xjb3USVCwy+0/NMzd5VxgY4CMCyTkItmy5n0voC" crossorigin="anonymous"></script>
+    <script src="lib/jqueryui/jquery-ui.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link rel="stylesheet" href='fullcalendar/fullcalendar.css' />
-    <script src='lib/jquery.min.js'></script>
     <script src='lib/moment.js'></script>
     <script src='fullcalendar/fullcalendar.js'></script>
     <script>$(function() {$('#calendar').fullCalendar({//put options and callbacks here
@@ -19,8 +22,47 @@
       right:  'today,month,agendaWeek,agendaDay prev,next'
     },
     events: 'events.php',
+    eventRender: function (event, element) {
+        element.attr('href', 'javascript:void(0);');
+        element.click(function() {
+            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
+            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+            $("#eventInfo").html(event.description);
+            $("#eventLocation").html(event.location);
+            $("#eventEmail").html(event.email);
+            $("#eventNum").html(event.phone);
+            $("#eventContent").dialog({ modal: true, title: event.title, width:440});
+            initialize(String(event.location));
+        });
+    }
     })}).on('click', '.fc-agendaWeek-button', function() {
 });</script>
+<script> function initialize(addressInput) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({address: addressInput}, function(results, status){
+    
+    if (status == google.maps.GeocoderStatus.OK) {
+    var myResult = results[0].geometry.location; // reference LatLng value
+
+    var mapOptions = {
+      center: myResult,
+      zoom: 18,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  var marker = new google.maps.Marker({
+  position:myResult,
+  animation:google.maps.Animation.BOUNCE
+  });
+
+  marker.setMap(map);
+    }
+    else{
+    }
+  })
+  
+}
+</script>
   </head>
 
   <body>
@@ -47,7 +89,22 @@
       <!-- Put calendar here -->
       <div id='calendar'></div>
 
+      <div id="eventContent" title="Event Details" style="display:none;">
+        Start: <span id="startTime"></span><br>
+        End: <span id="endTime"></span><br>
+        Location: <span id="eventLocation"></span><br><br>
+
+        <h5>Contact Information</h5>
+        Email: <span id="eventEmail"></span><br>
+        Phone Number: <span id="eventNum"></span><br><br>
+
+        <h5>Description</h5>
+        <p id="eventInfo"></p><br><br>
+        <div id="map-canvas" style="width:400px;height:400px"></div>
+</div>
+
     </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<INSTERT API KEY HERE>&callback=initialize"></script>
   </body>
 
 </html>
