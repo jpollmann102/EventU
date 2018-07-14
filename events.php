@@ -1,17 +1,15 @@
 <?php
 
+require "config.php";
 
-$connect = new PDO('mysql:host=localhost;dbname=eventwebsite', 'root', 'root');
+  session_set_cookie_params(0);
+  session_start();
 
 $data = array();
 
 $query = "SELECT * FROM can_create_school_event ORDER BY event_id";
 
-$statement = $connect->prepare($query);
-
-$statement->execute();
-
-$result = $statement->fetchAll();
+$result = $conn->query($query);
 
 foreach($result as $row)
 {
