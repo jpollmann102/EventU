@@ -24,6 +24,7 @@
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
       <a href="registerRSO.php">Register an RSO</a>
+      <a href="joinRSO.php">Join an RSO</a>
     </div>
 
     <!-- Code to login a user -->
