@@ -1,6 +1,11 @@
 <?php
   require "config.php";
 
+  if(!isset($_SESSION['studentID']))
+  {
+    $error = 'You must be a registered student to join an RSO';
+  }
+
   $rsoName = $_POST['rso_name'];
   $username = $_SESSION['login_username'];
   $studentID = $_SESSION['studentID'];
@@ -19,4 +24,5 @@
     $_SESSION['join_result'] = 'Error joining RSO';
     header("Location: joinRSO.php");
   }
+
 ?>

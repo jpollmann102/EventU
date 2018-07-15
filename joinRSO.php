@@ -20,6 +20,9 @@
       <?php if(isset($_SESSION['logged_in'])): ?>
         <?php echo "<p>" . $_SESSION['login_user'] . "</p>"; ?>
         <a href="logout.php">Logout</a>
+        <?php if(isset($_SESSION['admin'])): ?>
+          <a href="adminDash.php">Admin Dashboard</a>
+        <?php endif; ?>
       <?php else: ?>
         <a href="login.php">Login</a>
         <a href="registerUser.php">Register</a>
@@ -29,7 +32,8 @@
     </div>
 
     <div class="main">
-      <p>test1</p>
+      <h2>Browse RSO's</h2>
+
       <?php
         if(isset($_SESSION['join_result']))
         {
@@ -38,19 +42,12 @@
           unset($_SESSION['join_result']);
         }
       ?>
-      <p>test2</p>
+
+      <br /><br /><br />
       <?php
 
-        $error = '';
-        // check if the user is a student
-        if(!isset($_SESSION['studentID']))
-        {
-          // not a student, can't join an RSO
-          $error = 'You must be a student to join an RSO';
-          exit();
-        }
-
         require "config.php";
+        $error = '';
 
         $sql = "SELECT RSO_name FROM member_of_rso";
         $result = $conn->query($sql);
@@ -75,8 +72,9 @@
           $error = 'Error retrieving RSO names';
         }
         $conn->close();
+
       ?>
-      <p>test3</p>
+
       <h4 class="error"><?php echo $error; ?></h4>
     </div>
   </body>

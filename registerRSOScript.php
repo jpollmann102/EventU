@@ -267,6 +267,7 @@
 
     // created successfully
     $_SESSION['admin'] = TRUE;
+    $_SESSION['adminRSO'] = $rsoName;
     $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $rsoName . ")";
     header("Location: index.php");
     $conn->close();
