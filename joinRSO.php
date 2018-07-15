@@ -29,16 +29,16 @@
     </div>
 
     <div class="main">
-
+      <p>test1</p>
       <?php
         if(isset($_SESSION['join_result']))
         {
           // user just joined successfully
-          echo "<h4>" . $_SESSION['join_result'] . "</h4>";
+          echo '<h4>' . $_SESSION['join_result'] . '</h4>';
           unset($_SESSION['join_result']);
         }
       ?>
-
+      <p>test2</p>
       <?php
 
         $error = '';
@@ -52,21 +52,21 @@
 
         require "config.php";
 
-        $sql = "SELECT * FROM member_of_rso";
+        $sql = "SELECT RSO_name FROM member_of_rso";
         $result = $conn->query($sql);
 
         if($result->num_rows > 0)
         {
           // success
-
           echo "<table class='table'>";
 
           while($row = $result->fetch_assoc())
           {
-            // echo "<tr>";
-            // echo "<td><input type='hidden' name='rso_name' value='" . $row[RSO_name] . "' />" . $row[RSO_name] . "</td>";
-            // echo "<td><form action='join.php' method='post'><input type='submit' value='Join'/></form></td>";
-            // echo "</tr>";
+            $rsoName = $row['RSO_name'];
+            echo "<tr>";
+            echo "<td><input type='hidden' name='rso_name' value=" . $rsoName . " />" . $rsoName . "</td>";
+            echo "<td><form action='joinRSOScript.php' method='post'><input type='submit' value='Join'/></form></td>";
+            echo "</tr>";
           }
 
           echo "</table>";
@@ -76,8 +76,7 @@
         }
         $conn->close();
       ?>
-
-      <p>test</p>
+      <p>test3</p>
       <h4 class="error"><?php echo $error; ?></h4>
     </div>
   </body>
