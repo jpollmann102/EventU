@@ -23,9 +23,9 @@
     <script src='fullcalendar/fullcalendar.js'></script>
     <script>var pop="test";</script>
     <script>console.log(pop);</script>
-    <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
+    <script>console.log('<?php echo $_SESSION['adm_id'];?>');</script>
     <script>
-        var uni = "University of South Florida";
+        var uni = "<?php echo $_SESSION['school'];?>";
     var dat;   
     $.ajax({
       url:"events.php",
@@ -67,7 +67,7 @@
 <script> function initialize(addressInput) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({address: addressInput}, function(results, status){
-    
+
     if (status == google.maps.GeocoderStatus.OK) {
     var myResult = results[0].geometry.location; // reference LatLng value
 
@@ -87,13 +87,14 @@
     else{
     }
   })
-  
+
 }
 </script>
     <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
   </head>
 
   <body>
+
     <div class="sidenav">
     <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
       <!-- Code for checking if user is logged in or not -->
@@ -143,7 +144,7 @@
       <div id='calendar'></div>
 
       <div id="eventContent" title="Event Details" style="display:none;">
-        
+
         Start: <span id="startTime"></span><br>
         End: <span id="endTime"></span><br>
         Location: <span id="eventLocation"></span><br><br>

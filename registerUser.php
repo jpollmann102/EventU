@@ -32,11 +32,7 @@
       <?php endif; ?>
     </div>
 
-    <!-- Code to register a user -->
-    <?php
-      require "config.php";
-      $error = '';
-
+<?php
       if(isset($_POST['submit']) && !empty($_POST['username']) && !empty($_POST['password']))
       {
         $username = htmlspecialchars($_POST['username']);
@@ -100,7 +96,7 @@
     <div class="main">
       <h1>EventU - Register</h1>
 
-      <form class="registerUserForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method = "post">
+      <form class="registerUserForm" action="registerUserScript.php" method = "post">
         First Name:<br />
         <input type="text" name="firstname" required /><br />
         Last Name:<br />
@@ -126,7 +122,16 @@
         <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
 
         <input type="submit" name="submit" value="Submit" /><br />
-        <h4 class="error"><?php echo $error; ?></h4>
+
+        <?php
+          if(isset($_SESSION['register_result']))
+          {
+            // user just joined successfully
+            echo '<h4>' . $_SESSION['register_result'] . '</h4>';
+            unset($_SESSION['register_result']);
+          }
+        ?>
+
       </form>
       <p>
         Already have an account? <a href="login.php">Login here</a><br /><br />
