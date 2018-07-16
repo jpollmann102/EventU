@@ -1,4 +1,8 @@
 <?php
+
+  session_set_cookie_params(0);
+  session_start();
+  
   // check if the user can create an RSO
   if(!isset($_SESSION['studentID']) || !isset($_SESSION['admin']))
   {

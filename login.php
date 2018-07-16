@@ -14,7 +14,7 @@
 
   <body>
     <div class="sidenav">
-      
+
       <!-- Code for checking if user is logged in or not -->
       <a href="index.php">EventU</a>
       <?php if(isset($_SESSION['logged_in'])): ?>
@@ -78,6 +78,7 @@
             while($row = $result->fetch_assoc())
             {
               $_SESSION['adminRSO'] = $row['RSO_name'];
+              $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $_SESSION['adminRSO'] . ")";
             }
           }
 

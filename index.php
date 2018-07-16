@@ -73,6 +73,7 @@
   </head>
 
   <body>
+    
     <div class="sidenav">
 
       <!-- Code for checking if user is logged in or not -->
@@ -103,7 +104,7 @@
       <div id='calendar'></div>
 
       <div id="eventContent" title="Event Details" style="display:none;">
-        
+
         Start: <span id="startTime"></span><br>
         End: <span id="endTime"></span><br>
         Location: <span id="eventLocation"></span><br><br>

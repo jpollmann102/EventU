@@ -14,6 +14,7 @@
   </head>
 
   <body>
+
     <div class="sidenav">
       <!-- Code for checking if user is logged in or not -->
       <a href="index.php">EventU</a>
@@ -43,7 +44,7 @@
         }
       ?>
 
-      <br /><br /><br />
+      <br /><br />
       <?php
 
         require "config.php";
@@ -61,8 +62,10 @@
           {
             $rsoName = $row['RSO_name'];
             echo "<tr>";
-            echo "<td><input type='hidden' name='rso_name' value=" . $rsoName . " />" . $rsoName . "</td>";
-            echo "<td><form action='joinRSOScript.php' method='post'><input type='submit' value='Join'/></form></td>";
+            //echo "<td><input type='hidden' name='rso_name' value=" . $rsoName . " />" . $rsoName . "</td>";
+            echo "<td><form action='joinRSOScript.php' method='post'>
+            <input type='hidden' name='rso_name' value=" . $rsoName . " />" . $rsoName . "</td>
+            <td><input type='submit' value='Join'/></form></td>";
             echo "</tr>";
           }
 
