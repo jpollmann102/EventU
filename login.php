@@ -24,8 +24,10 @@
         <a href="login.php">Login</a>
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
+      <?php if(isset($_SESSION['logged_in'])): ?>
       <a href="registerRSO.php">Register an RSO</a>
       <a href="joinRSO.php">Join an RSO</a>
+<?php endif; ?>
 
     </div>
 
@@ -80,6 +82,30 @@
               $_SESSION['adminRSO'] = $row['RSO_name'];
             }
           }
+          if($_SESSION['admin']){
+          $sql = "SELECT admin_id FROM the_admin WHERE user_name = '$username'";
+          $result = $conn->query($sql);
+          if($result->num_rows > 0)
+          {
+            // user is in fact an admin
+            while($row = $result->fetch_assoc())
+            {
+              $_SESSION['adm_id'] = $row['admin_id'];
+            }
+          }
+        }
+
+           // check enrolled university
+           $sql = "SELECT university_name FROM user_university WHERE user_name = '$username'";
+           $result = $conn->query($sql);
+           if($result->num_rows > 0)
+           {
+             // user is in fact an admin
+             while($row = $result->fetch_assoc())
+            {
+              $_SESSION['school'] = $row['university_name'];
+            }
+           }
 
           header("Location: index.php");
           $conn->close();
@@ -105,7 +131,7 @@
         <input type = "submit" name = "submit" value = "Submit" />
       </form>
       <p>
-        Don't have an account? <a href = "register.php">Register here</a>
+        Don't have an account? <a href = "registerUser.php">Register here</a>
       </p>
     </div>
 

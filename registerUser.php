@@ -26,8 +26,10 @@
         <a href="login.php">Login</a>
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
+      <?php if(isset($_SESSION['logged_in'])): ?>
       <a href="registerRSO.php">Register an RSO</a>
       <a href="joinRSO.php">Join an RSO</a>
+      <?php endif; ?>
     </div>
 
     <!-- Code to register a user -->
@@ -41,17 +43,23 @@
   			$password = htmlspecialchars($_POST['password']);
         $firstname = htmlspecialchars($_POST['firstname']);
         $lastname = htmlspecialchars($_POST['lastname']);
+        $uniname = htmlspecialchars($_POST['uni_select']);
 
   			$sql = "INSERT INTO `the_user` (`user_name`, `pass_word`, `first_name`, `last_name`)
-  					VALUES ('$username', '$password', '$firstname', '$lastname')";
+            VALUES ('$username', '$password', '$firstname', '$lastname')";
+            
+        $sql2 = "INSERT INTO `user_university` (`user_name`, `university_name`)
+  					VALUES ('$username', '$uniname')";
 
   			if($conn->query($sql))
   			{
+          $conn->query($sql2);
   				// created successfully
           $_SESSION['admin'] = FALSE;
           $_SESSION['login_username'] = $username;
   				$_SESSION['login_user'] = $firstname . " " . $lastname;
-  				$_SESSION['logged_in'] = TRUE;
+          $_SESSION['logged_in'] = TRUE;
+          $_SESSION['school'] = $uniname;
         }else
         {
           // duplicate username
@@ -97,10 +105,24 @@
         <input type="text" name="firstname" required /><br />
         Last Name:<br />
         <input type="text" name="lastname" required /><br />
-        Username:<br />
+        Email:<br />
         <input type="text" name="username" required /><br />
         Password:<br />
         <input type="password" name="password" required /><br />
+        University:<br />
+        <select name="uni_select">
+      <?php
+      //require "config.php";
+      $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
+      $result = mysqli_query($conn, $sql) or die("Bad SQL: $sql");
+      while($row = mysqli_fetch_array($result)){
+        ?>
+        <option><?php echo $row["university_name"]; ?></option>
+        <?php
+      }
+
+      ?>
+      </select>
         <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
 
         <input type="submit" name="submit" value="Submit" /><br />
