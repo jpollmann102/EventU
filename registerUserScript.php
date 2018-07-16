@@ -20,7 +20,6 @@
     if($conn->query($sql))
     {
       // created successfully
-      $_SESSION['admin'] = FALSE;
       $_SESSION['login_username'] = $username;
       $_SESSION['login_user'] = $firstname . " " . $lastname;
       $_SESSION['logged_in'] = TRUE;

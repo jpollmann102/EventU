@@ -20,11 +20,11 @@
     <link rel="stylesheet" href='fullcalendar/fullcalendar.css' />
     <script src='lib/moment.js'></script>
     <script src='fullcalendar/fullcalendar.js'></script>
-    
+
 <script> function initialize(addressInput) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({address: addressInput}, function(results, status){
-    
+
     if (status == google.maps.GeocoderStatus.OK) {
     var myResult = results[0].geometry.location; // reference LatLng value
 
@@ -44,13 +44,13 @@
     else{
     }
   })
-  
+
 }
 </script>
   </head>
 
   <body>
-    
+
     <div class="sidenav">
 
       <!-- Code for checking if user is logged in or not -->
@@ -76,7 +76,7 @@
       <?php if(isset($_SESSION['logged_in'])): ?>
         <?php echo "<p>Welcome " . $_SESSION['login_user'] . "</p>"; ?>
       <?php endif; ?>
-      
+
       <label>Select University:</label>
       <select id="uni_select">
       <?php
@@ -116,7 +116,7 @@
   </body>
   <script>
     var uni = "University of Central Florida";
-    var dat;   
+    var dat;
     $.ajax({
       url:"events.php",
       type:"POST",
@@ -127,7 +127,7 @@
       }
     });
 
-    
+
 
     $(function() {$('#calendar').fullCalendar({//put options and callbacks here
     defaultView:'month',

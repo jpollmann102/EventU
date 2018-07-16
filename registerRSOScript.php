@@ -2,17 +2,17 @@
 
   session_set_cookie_params(0);
   session_start();
-  
+
   // check if the user can create an RSO
-  if(!isset($_SESSION['studentID']) || !isset($_SESSION['admin']))
+  if(!isset($_SESSION['studentID']) && !isset($_SESSION['admin']))
   {
     // the person is not a student or admin, they cannot create an RSO
-    $error = 'You must be a student or admin to create an RSO';
+    $_SESSION['registerRSO_result'] = 'You must be a student or admin to create an RSO';
+    header("Location: registerRSO.php");
     exit();
   }
 
   require "config.php";
-  $error = '';
 
   // check if RSO name is already registered
   if(!empty($_POST['rsoName']))
@@ -24,13 +24,15 @@
     if($result->num_rows > 0)
     {
       // error, RSO already created
-      $error = 'RSO name taken';
+      $_SESSION['registerRSO_result'] = 'RSO name taken';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
   }else
   {
-    $error = 'Please enter a name for your RSO';
+    $_SESSION['registerRSO_result'] = 'Please enter a name for your RSO';
+    header("Location: registerRSO.php");
     $conn->close();
     exit();
   }
@@ -48,46 +50,50 @@
     $loginID = $_SESSION['studentID'];
 
     /**** first, make sure they are all registered students ****/
-    $sql = "SELECT * FROM students WHERE user_name = '$member1'";
+    $sql = "SELECT * FROM student WHERE user_name = '$member1'";
     $result = $conn->query($sql);
 
     if(!$result->num_rows > 0)
     {
       // not a registered user
-      $error = 'Member 1 is not a registered student';
+      $_SESSION['registerRSO_result'] = 'Member 1 is not a registered student';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
 
-    $sql = "SELECT * FROM students WHERE user_name = '$member2'";
+    $sql = "SELECT * FROM student WHERE user_name = '$member2'";
     $result = $conn->query($sql);
 
     if(!$result->num_rows > 0)
     {
       // not a registered user
-      $error = $error . ' Member 2 is not a registered student';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Member 2 is not a registered student';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
 
-    $sql = "SELECT * FROM students WHERE user_name = '$member3'";
+    $sql = "SELECT * FROM student WHERE user_name = '$member3'";
     $result = $conn->query($sql);
 
     if(!$result->num_rows > 0)
     {
       // not a registered user
-      $error = $error . ' Member 3 is not a registered student';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Member 3 is not a registered student';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
 
-    $sql = "SELECT * FROM students WHERE user_name = '$member4'";
+    $sql = "SELECT * FROM student WHERE user_name = '$member4'";
     $result = $conn->query($sql);
 
     if(!$result->num_rows > 0)
     {
       // not a registered user
-      $error = $error . ' Member 4 is not a registered student';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Member 4 is not a registered student';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
@@ -102,7 +108,8 @@
     if(!$conn->query($sql))
     {
       // some error making them an admin
-      $error = 'Some error making user an admin';
+      $_SESSION['registerRSO_result'] = 'Some error making user an admin';
+      header("Location: registerRSO.php");
       $conn->close();
       exit();
     }
@@ -122,7 +129,7 @@
     }else
     {
       // some error getting the student id
-      $error = 'Error getting student id of member 1';
+      $_SESSION['registerRSO_result'] = 'Error getting student id of member 1';
     }
 
     $sql = "SELECT student_id FROM student WHERE user_name = '$member2'";
@@ -137,7 +144,7 @@
     }else
     {
       // some error getting the student id
-      $error = $error . ' Error getting student id of member 2';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error getting student id of member 2';
     }
 
     $sql = "SELECT student_id FROM student WHERE user_name = '$member3'";
@@ -152,7 +159,7 @@
     }else
     {
       // some error getting the student id
-      $error = $error . ' Error getting student id of member 3';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error getting student id of member 3';
     }
 
     $sql = "SELECT student_id FROM student WHERE user_name = '$member4'";
@@ -167,10 +174,10 @@
     }else
     {
       // some error getting the student id
-      $error = $error . ' Error getting student id of member 4';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error getting student id of member 4';
     }
 
-    if($error != '')
+    if($_SESSION['registerRSO_result'] != '')
     {
       // an error occured
 
@@ -179,10 +186,11 @@
       if(!$conn->query($sql))
       {
         // error removing user as an admin
-        $error = $error . ' Error removing user as admin';
+        $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error removing user as admin';
       }
 
       $conn->close();
+      header("Location: registerRSO.php");
       exit();
     }
 
@@ -193,7 +201,7 @@
     if(!$conn->query($sql))
     {
       // some error inserting creator
-      $error = 'Error inserting creator into join_rso';
+      $_SESSION['registerRSO_result'] = 'Error inserting creator into join_rso';
     }
 
     $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
@@ -202,7 +210,7 @@
     if(!$conn->query($sql))
     {
       // some error inserting member1
-      $error = $error . ' Error inserting member 1 into join_rso';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error inserting member 1 into join_rso';
     }
 
     $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
@@ -211,7 +219,7 @@
     if(!$conn->query($sql))
     {
       // some error inserting member2
-      $error = $error . ' Error inserting member 2 into join_rso';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error inserting member 2 into join_rso';
     }
 
     $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
@@ -220,7 +228,7 @@
     if(!$conn->query($sql))
     {
       // some error inserting member3
-      $error = $error . ' Error inserting member 3 into join_rso';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error inserting member 3 into join_rso';
     }
 
     $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`, `RSO_description`)
@@ -229,20 +237,21 @@
     if(!$conn->query($sql))
     {
       // some error inserting member4
-      $error = $error . ' Error inserting member 4 into join_rso';
+      $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . ' Error inserting member 4 into join_rso';
     }
 
-    if($error != '')
+    if($_SESSION['registerRSO_result'] != '')
     {
       // an error occurred, delete anything that may have been added
       $sql = "DELETE FROM `join_rso` WHERE `RSO_name` = '$rsoName'";
       if(!$conn->query($sql))
       {
         // error removing user as an admin
-        $error = $error . 'Error removing users from join_rso';
+        $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . 'Error removing users from join_rso';
       }
 
       $conn->close();
+      header("Location: registerRSO.php");
       exit();
     }
     /*************************************************************/
@@ -254,17 +263,18 @@
     if(!$conn->query($sql))
     {
       // some error inserting admin
-      $error = 'Error inserting admin into member_of_rso';
+      $_SESSION['registerRSO_result'] = 'Error inserting admin into member_of_rso';
 
       // remove everything we just added
       $sql = "DELETE FROM `join_rso` WHERE `RSO_name` = '$rsoName'";
       if(!$conn->query($sql))
       {
         // error removing user as an admin
-        $error = $error . 'Error removing users from join_rso';
+        $_SESSION['registerRSO_result'] = $_SESSION['registerRSO_result'] . 'Error removing users from join_rso';
       }
 
       $conn->close();
+      header("Location: registerRSO.php");
       exit();
     }
     /*************************************************************/
@@ -273,10 +283,10 @@
     $_SESSION['admin'] = TRUE;
     $_SESSION['adminRSO'] = $rsoName;
     $_SESSION['login_user'] = $_SESSION['login_user'] . " (" . $rsoName . ")";
-    header("Location: index.php");
+    header("Location: registerRSO.php");
     $conn->close();
   }else
   {
-    $error = 'Please enter the information for your RSO';
+    $_SESSION['registerRSO_result'] = 'Please enter the information for your RSO';
   }
 ?>

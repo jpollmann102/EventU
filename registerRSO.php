@@ -33,6 +33,15 @@
     <div class="main">
       <h1>EventU - Register RSO</h1>
 
+      <?php
+        if(isset($_SESSION['registerRSO_result']))
+        {
+          // user just joined successfully
+          echo '<h4>' . $_SESSION['registerRSO_result'] . '</h4>';
+          unset($_SESSION['registerRSO_result']);
+        }
+      ?>
+
       <form class="registerRSOForm" action="registerRSOScript.php" method = "post">
         RSO Name:<br />
         <input type="text" name="rsoName" required /><br />

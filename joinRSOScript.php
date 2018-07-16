@@ -11,11 +11,11 @@
     exit();
   }
 
-  $rsoName = $_POST["rso_name"];
+  $rsoName = $_POST['rso_name'];
   $username = $_SESSION['login_username'];
   $studentID = $_SESSION['studentID'];
   $sql = "INSERT INTO `join_rso` (`RSO_name`, `user_name`, `student_id`)
-          VALUES ('$rsoName', '$username', 'studentID')";
+          VALUES ('$rsoName', '$username', '$studentID')";
 
   if($conn->query($sql))
   {
