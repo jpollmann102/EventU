@@ -7,7 +7,7 @@ require "config.php";
 
 $data = array();
 
-$query = "SELECT * FROM can_create_school_event ORDER BY event_id";
+$query = "SELECT * FROM can_create_school_event WHERE event_id IN (SELECT event_id FROM university_hosts WHERE university_name = '{$_POST['uni']}')";
 
 $result = $conn->query($query);
 

@@ -2,6 +2,7 @@
 <html lang="en-US">
 
 <?php
+  require "config.php";
   session_set_cookie_params(0);
   session_start();
 ?>
@@ -19,29 +20,7 @@
     <link rel="stylesheet" href='fullcalendar/fullcalendar.css' />
     <script src='lib/moment.js'></script>
     <script src='fullcalendar/fullcalendar.js'></script>
-    <script>$(function() {$('#calendar').fullCalendar({//put options and callbacks here
-    defaultView:'month',
-    header:{
-      left:   'title',
-      center: '',
-      right:  'today,month,agendaWeek,agendaDay prev,next'
-    },
-    events: 'events.php',
-    eventRender: function (event, element) {
-        element.attr('href', 'javascript:void(0);');
-        element.click(function() {
-            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
-            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
-            $("#eventInfo").html(event.description);
-            $("#eventLocation").html(event.location);
-            $("#eventEmail").html(event.email);
-            $("#eventNum").html(event.phone);
-            $("#eventContent").dialog({ modal: true, title: event.title, width:440});
-            initialize(String(event.location));
-        });
-    }
-    })}).on('click', '.fc-agendaWeek-button', function() {
-});</script>
+    
 <script> function initialize(addressInput) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({address: addressInput}, function(results, status){
@@ -90,6 +69,21 @@
       <?php if(isset($_SESSION['logged_in'])): ?>
         <?php echo "<p>Welcome " . $_SESSION['login_user'] . "</p>" ?>
       <?php endif; ?>
+      
+      <label>Select University:</label>
+      <select id="uni_select">
+      <?php
+      //require "config.php";
+      $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
+      $result = mysqli_query($conn, $sql) or die("Bad SQL: $sql");
+      while($row = mysqli_fetch_array($result)){
+        ?>
+        <option><?php echo $row["university_name"]; ?></option>
+        <?php
+      }
+
+      ?>
+      </select>
 
       <!-- Put calendar here -->
       <div id='calendar'></div>
@@ -109,7 +103,85 @@
 </div>
 
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<INSTERT API KEY HERE>&callback=initialize"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_hnBJ4M2rKgrMQXR6cDGnWl1hZ8ATP7s&callback=initialize"></script>
   </body>
+  <script>
+    var uni = "University of Central Florida";
+    var dat;   
+    $.ajax({
+      url:"events.php",
+      type:"POST",
+      dataType: "json",
+      data:{uni:uni},
+      success:function(data){
+        dat=data
+      }
+    });
+
+    
+
+    $(function() {$('#calendar').fullCalendar({//put options and callbacks here
+    defaultView:'month',
+    header:{
+      left:   'title',
+      center: '',
+      right:  'today,month,agendaWeek,agendaDay prev,next'
+    },
+    events: dat,
+    //events: 'events.php',
+    eventRender: function (event, element) {
+        element.attr('href', 'javascript:void(0);');
+        element.click(function() {
+            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
+            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+            $("#eventInfo").html(event.description);
+            $("#eventLocation").html(event.location);
+            $("#eventEmail").html(event.email);
+            $("#eventNum").html(event.phone);
+            $("#eventContent").dialog({ modal: true, title: event.title, width:440});
+            initialize(String(event.location));
+        });
+    }
+    })}).on('click', '.fc-agendaWeek-button', function() {
+});
+$("#uni_select").change(function(){
+      uni=this.value;
+      $.ajax({
+      url:"events.php",
+      type:"POST",
+      dataType: "json",
+      data:{uni:uni},
+      success:function(data){
+        dat=data
+      }
+    });
+      $('#calendar').fullCalendar('destroy');
+      $(function() {$('#calendar').fullCalendar({//put options and callbacks here
+    defaultView:'month',
+    header:{
+      left:   'title',
+      center: '',
+      right:  'today,month,agendaWeek,agendaDay prev,next'
+    },
+    events: dat,
+    //events: 'events.php',
+    eventRender: function (event, element) {
+        element.attr('href', 'javascript:void(0);');
+        element.click(function() {
+            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
+            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+            $("#eventInfo").html(event.description);
+            $("#eventLocation").html(event.location);
+            $("#eventEmail").html(event.email);
+            $("#eventNum").html(event.phone);
+            $("#eventContent").dialog({ modal: true, title: event.title, width:440});
+            initialize(String(event.location));
+        });
+    }
+    })}).on('click', '.fc-agendaWeek-button', function() {
+});
+    });
+
+</script>
 
 </html>
