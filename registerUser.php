@@ -26,10 +26,11 @@
         <a href="login.php">Login</a>
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
+      <?php if(isset($_SESSION['logged_in'])): ?>
       <a href="registerRSO.php">Register an RSO</a>
       <a href="joinRSO.php">Join an RSO</a>
+      <?php endif; ?>
     </div>
-
 
 
     <div class="main">
@@ -40,10 +41,24 @@
         <input type="text" name="firstname" required /><br />
         Last Name:<br />
         <input type="text" name="lastname" required /><br />
-        Username:<br />
+        Email:<br />
         <input type="text" name="username" required /><br />
         Password:<br />
         <input type="password" name="password" required /><br />
+        University:<br />
+        <select name="uni_select">
+      <?php
+      //require "config.php";
+      $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
+      $result = mysqli_query($conn, $sql) or die("Bad SQL: $sql");
+      while($row = mysqli_fetch_array($result)){
+        ?>
+        <option><?php echo $row["university_name"]; ?></option>
+        <?php
+      }
+
+      ?>
+      </select>
         <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
 
         <input type="submit" name="submit" value="Submit" /><br />
