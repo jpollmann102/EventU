@@ -58,7 +58,7 @@
         <?php echo "<p>" . $_SESSION['login_user'] . "</p>"; ?>
         <a href="logout.php">Logout</a>
         <?php if(isset($_SESSION['admin'])): ?>
-          <a href="adminDash.php">Admin Dashboard</a>
+          <!-- <a href="adminDash.php">Admin Dashboard</a> -->
         <?php endif; ?>
       <?php else: ?>
         <a href="login.php">Login</a>
