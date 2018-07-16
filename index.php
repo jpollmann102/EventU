@@ -15,7 +15,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js" integrity="sha384-CS0nxkpPy+xUkNGhObAISrkg/xjb3USVCwy+0/NMzd5VxgY4CMCyTkItmy5n0voC" crossorigin="anonymous"></script>
     <script src="lib/jqueryui/jquery-ui.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
-    
+
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link rel="stylesheet" href='fullcalendar/fullcalendar.css' />
     <script src='lib/moment.js'></script>
@@ -51,15 +51,21 @@
 
   <body>
     <div class="sidenav">
+
       <!-- Code for checking if user is logged in or not -->
       <?php if(isset($_SESSION['logged_in'])): ?>
-        <?php echo "<p>" . $_SESSION['login_user'] . "</p>" ?>
+        <?php echo "<p>" . $_SESSION['login_user'] . "</p>"; ?>
         <a href="logout.php">Logout</a>
+        <?php if(isset($_SESSION['admin'])): ?>
+          <a href="adminDash.php">Admin Dashboard</a>
+        <?php endif; ?>
       <?php else: ?>
         <a href="login.php">Login</a>
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
       <a href="registerRSO.php">Register an RSO</a>
+      <a href="joinRSO.php">Join an RSO</a>
+
     </div>
 
     <div class="main">
@@ -67,7 +73,7 @@
 
       <!-- Code for checking if user is logged in or not -->
       <?php if(isset($_SESSION['logged_in'])): ?>
-        <?php echo "<p>Welcome " . $_SESSION['login_user'] . "</p>" ?>
+        <?php echo "<p>Welcome " . $_SESSION['login_user'] . "</p>"; ?>
       <?php endif; ?>
       
       <label>Select University:</label>
@@ -89,6 +95,7 @@
       <div id='calendar'></div>
 
       <div id="eventContent" title="Event Details" style="display:none;">
+        
         Start: <span id="startTime"></span><br>
         End: <span id="endTime"></span><br>
         Location: <span id="eventLocation"></span><br><br>
@@ -100,10 +107,11 @@
         <h5>Description</h5>
         <p id="eventInfo"></p><br><br>
         <div id="map-canvas" style="width:400px;height:400px"></div>
-</div>
+
+      </div>
 
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_hnBJ4M2rKgrMQXR6cDGnWl1hZ8ATP7s&callback=initialize"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<PUT API KEY HERE>&callback=initialize"></script>
   </body>
   <script>
     var uni = "University of Central Florida";

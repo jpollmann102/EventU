@@ -14,6 +14,7 @@
 
   <body>
     <div class="sidenav">
+      
       <!-- Code for checking if user is logged in or not -->
       <a href="index.php">EventU</a>
       <?php if(isset($_SESSION['logged_in'])): ?>
@@ -24,6 +25,8 @@
         <a href="registerUser.php">Register</a>
       <?php endif; ?>
       <a href="registerRSO.php">Register an RSO</a>
+      <a href="joinRSO.php">Join an RSO</a>
+
     </div>
 
     <!-- Code to login a user -->
@@ -66,13 +69,16 @@
           }
 
           // check if the user is an admin as well
-          $sql = "SELECT * FROM the_admin WHERE user_name = '$username'";
+          $sql = "SELECT RSO_name FROM member_of_rso WHERE user_name = '$username'";
           $result = $conn->query($sql);
           if($result->num_rows > 0)
           {
             // user is in fact an admin
             $_SESSION['admin'] = TRUE;
-            // TODO: add support for checking name of RSO you are admin of
+            while($row = $result->fetch_assoc())
+            {
+              $_SESSION['adminRSO'] = $row['RSO_name'];
+            }
           }
 
           header("Location: index.php");
