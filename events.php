@@ -9,7 +9,8 @@ $data = array();
 
 if($_POST['uni']==$_SESSION['school']){
 
-$query = "SELECT * FROM can_create_school_event WHERE event_id IN (SELECT event_id FROM university_hosts WHERE university_name = '{$_POST['uni']}') AND (event_type = 'Public' OR event_type='Private')";
+  
+$query = "SELECT * FROM can_create_school_event WHERE event_id IN (SELECT event_id FROM university_hosts WHERE university_name = '{$_POST['uni']}') AND (event_type = 'Public' OR event_type='Private' OR event_type='RSO Event')";
 
 }
 

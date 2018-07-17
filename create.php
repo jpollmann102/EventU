@@ -7,11 +7,20 @@ require "config.php";
 $adid = $_SESSION['adm_id'];
 $usnm = $_SESSION['login_username'];
 $sch = $_SESSION['school'];
+$ename = $_POST['eventnm'];
+$estart = $_POST['eventstart'];
+$eend = $_POST['eventend'];
+$ecat = $_POST['eventcat'];
+$eloc = $_POST['eventloc'];
+$enum = $_POST['eventnum'];
+$etype = $_POST['eventtyp'];
+$eemail = $_POST['eventmail'];
+$edesc = $_POST['eventdesc'];
+$erso = $_POST['eventrso'];
 
-$query = "INSERT INTO can_create_school_event (`event_name`, `start_date`, `end_date`, `category`, `location`, `phone_num`, `event_type`, `email`, `admin_id`, `user_name`, `event_description`, `event_id`, `RSO_name`)
-                VALUE('{$_POST['eventnm']}', '{$_POST['eventstart']}', '{$_POST['eventend']}', '{$_POST['eventcat']}', '{$_POST['eventloc']}', '{$_POST['eventnum']}', '{$_POST['eventtyp']}', '{$_POST['eventmail']}', '$adid', '$usnm', '{$_POST['eventdesc']}', DEFAULT, '{$_POST['eventrso']}')";
+$query = 'INSERT INTO `can_create_school_event` (`event_name`, `start_date`, `end_date`, `category`, `location`, `phone_num`, `event_type`, `email`, `admin_id`, `user_name`, `event_description`, `event_id`, `RSO_name`)
+                VALUES('$ename', '$estart', '$eend', '$ecat', '$eloc', '$enum', '$etype', '$eemail', '$adid', '$usnm', '$edesc', DEFAULT, '$erso')';
 
-}
 
 $result = $conn->query($query);
 

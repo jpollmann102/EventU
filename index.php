@@ -138,6 +138,7 @@
       </select>
 
       <button id="add_event" style="<?php if($_SESSION['admin']){echo "visibility:visible";}else{echo "visibility:hidden";}?>">Create Event</button>
+      
       <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
 
       <!-- Put calendar here -->
@@ -227,6 +228,76 @@
   </div>
 
 </div>
+
+
+<div id="myModal" class="modal">
+    <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>Create Event</h2>
+    </div>
+    <div class="modal-body">
+      Event Name: <input type="text" id="eventname" required /><br />
+      Event Location: <input type="text" id="eventlocation" required /><br />
+      Event Date/Time: <div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <input type='text' class="form-control" id='startevent' />
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#startevent').datetimepicker();
+            });
+        </script>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <input type='text' class="form-control" id='endevent' />
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#endevent').datetimepicker();
+            });
+        </script>
+    </div>
+</div>
+      Event Category: <input type="text" id="eventcategory" required /><br />
+      Event RSO: <select id="rso_select">
+        <option>None</option>
+      <?php
+      //require "config.php";
+      $username1=$_SESSION['login_username'];
+      $sql = "SELECT DISTINCT RSO_name FROM member_of_rso WHERE user_name = '$username1' ORDER BY RSO_name ASC";
+      $result = mysqli_query($conn, $sql) or die("Bad SQL: $sql");
+      while($row = mysqli_fetch_array($result)){
+        ?>
+        <option><?php echo $row["RSO_name"]; ?></option>
+        <?php
+      }
+
+      ?>
+      </select>
+      Event Type: <select id="eventtype">
+        <option>Public</option>
+        <option>Private</option>
+        <option>RSO Event</option>
+    </select><br />
+      Contact Email: <input type="text" id="eventemail" required /><br />
+      Contact Number: <input type="text" id="eventnumber" required /><br />
+      Event Description: <textarea rows="4" cols="50" id = "eventdescription" required></textarea>
+    </div>
+    <div class="modal-footer">
+    <button id="submit_event">Create Event</button>
+    </div>
+  </div>
+
+</div>
+
+
   </body>
   <script>
 
@@ -316,7 +387,7 @@ subbtn.onclick = function(){
     $.ajax({
       url:"create.php",
       type:"POST",
-      data:{eventnm:eventnm, eventloc:eventloc, eventcat:eventcat, eventtyp:eventtyp, eventmail:eventmail, eventnum:eventnum, eventdesc:eventdesc, eventstart:eventstart, eventend:eventend, uni:uni, eventrso:eventrso},
+      data:{eventnm:eventnm, eventstart:eventstart, eventend:eventend, eventcat:eventcat, eventloc:eventloc, eventnum:eventnum, eventtyp:eventtyp, eventmail:eventmail, eventdesc:eventdesc, eventrso:eventrso, uni:uni},
       error:function(ts){
         console.log("<?php echo $_SESSION['adm_id']?>");
       }
