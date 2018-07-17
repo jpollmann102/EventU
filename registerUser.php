@@ -45,22 +45,30 @@
         <input type="text" name="username" required /><br />
         Password:<br />
         <input type="password" name="password" required /><br />
-        University:<br />
-        <select name="uni_select">
-      <?php
-      //require "config.php";
-      $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
-      $result = mysqli_query($conn, $sql) or die("Bad SQL: $sql");
-      while($row = mysqli_fetch_array($result)){
-        ?>
-        <option><?php echo $row["university_name"]; ?></option>
-        <?php
-      }
-
-      ?>
-      </select>
         <input type="checkbox" id="studentCheck" name="student" onclick="studentChecked()"/> Are you a student?<br />
+        University:<br />
 
+        <select name="uni_select">
+
+          <?php
+            require "config.php";
+            $error = '';
+            $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
+            $result = $conn->query($sql);
+
+            if($result->num_rows > 0)
+            {
+              while($row = $result->fetch_assoc())
+              {
+                echo "<option>" . $row["university_name"] . "</option>";
+              }
+            }else
+            {
+              $error = 'University spinner broken';
+            }
+          ?>
+
+        </select><br />
         <input type="submit" name="submit" value="Submit" /><br />
 
         <?php
@@ -73,6 +81,9 @@
         ?>
 
       </form>
+      <p>
+        <?php echo $error; ?>
+      </p>
       <p>
         Already have an account? <a href="login.php">Login here</a><br /><br />
         Looking to register an RSO? <a href="registerRSO.php">Register here</a>
