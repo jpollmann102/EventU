@@ -13,9 +13,10 @@
     $password = htmlspecialchars($_POST['password']);
     $firstname = htmlspecialchars($_POST['firstname']);
     $lastname = htmlspecialchars($_POST['lastname']);
+    $uniName = htmlspecialchars($_POST['uni_select']);
 
     $sql = "INSERT INTO `the_user` (`user_name`, `pass_word`, `first_name`, `last_name`)
-        VALUES ('$username', '$password', '$firstname', '$lastname')";
+            VALUES ('$username', '$password', '$firstname', '$lastname')";
 
     if($conn->query($sql))
     {
@@ -27,6 +28,23 @@
     {
       // duplicate username
       $_SESSION['register_result'] = 'Username taken';
+      header("Location: registerUser.php");
+      $conn->close();
+      exit();
+    }
+
+    $sql = "INSERT INTO `user_university` (`user_name`, `university_name`)
+            VALUES ('$username', '$uniName')";
+
+    if($conn->query($sql))
+    {
+      // created successfully
+      $_SESSION['user_uni'] = $uniName;
+    }else
+    {
+      // duplicate username
+      $_SESSION['register_result'] = 'Error with registering in university';
+      header("Location: registerUser.php");
       $conn->close();
       exit();
     }
@@ -47,6 +65,7 @@
       }else
       {
         $_SESSION['register_result'] = 'Some error adding student';
+        header("Location: registerUser.php");
         $conn->close();
         exit();
       }
