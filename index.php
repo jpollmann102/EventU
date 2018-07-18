@@ -124,6 +124,7 @@
       <script>console.log('<?php echo $_SESSION['login_username'];?>');</script>
       <label>Select University:</label>
       <select id="uni_select">
+      <option></option>
       <?php
       //require "config.php";
       $sql = "SELECT DISTINCT university_name FROM part_of_university ORDER BY university_name ASC";
@@ -388,8 +389,8 @@ subbtn.onclick = function(){
       url:"create.php",
       type:"POST",
       data:{eventnm:eventnm, eventstart:eventstart, eventend:eventend, eventcat:eventcat, eventloc:eventloc, eventnum:eventnum, eventtyp:eventtyp, eventmail:eventmail, eventdesc:eventdesc, eventrso:eventrso, uni:uni},
-      error:function(ts){
-        console.log("<?php echo $_SESSION['adm_id']?>");
+      success:function(data){
+        console.log(data);
       }
     });
     modal.style.display = "none";
